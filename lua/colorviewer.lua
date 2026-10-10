@@ -189,28 +189,32 @@ function M.show_color_boxes()
     --------------------------------------------------------
     -- Match any #RRGGBB hex colors and show a color box
     --------------------------------------------------------
-    for hex in line:gmatch("#%x%x%x%x%x%x") do
-      local hl_group = get_highlight_group(hex)
-      local start = line:find(hex)
-      if start then
-        vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, start - 1, {
-          virt_text = { { M.config.symbol, hl_group } },
-          virt_text_pos = "inline",
-        })
+    if M.config.highlight.codes ~= false then
+      for hex in line:gmatch("#%x%x%x%x%x%x") do
+        local hl_group = get_highlight_group(hex)
+        local start = line:find(hex)
+        if start then
+          vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, start - 1, {
+            virt_text = { { M.config.symbol, hl_group } },
+            virt_text_pos = "inline",
+          })
+        end
       end
     end
 
     --------------------------------------------------------
     -- Match known color names from our color_map
     --------------------------------------------------------
-    for color_name, hex in pairs(color_map) do
-      local start = line:find(color_name)
-      if start then
-        local hl_group = get_highlight_group(hex)
-        vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, start - 1, {
-          virt_text = { { M.config.symbol, hl_group } },
-          virt_text_pos = "inline",
-        })
+    if M.config.highlight.names ~= false then
+      for color_name, hex in pairs(color_map) do
+        local start = line:find(color_name)
+        if start then
+          local hl_group = get_highlight_group(hex)
+          vim.api.nvim_buf_set_extmark(bufnr, ns_id, i - 1, start - 1, {
+            virt_text = { { M.config.symbol, hl_group } },
+            virt_text_pos = "inline",
+          })
+        end
       end
     end
   end
@@ -250,6 +254,10 @@ vim.api.nvim_create_autocmd({ "TextChanged", "BufWrite", "BufEnter" }, {
 ------------------------------------------------------------
 M.config = {
   symbol = "■", -- the inline color box symbol
+  highlight = {
+    names = true,
+    codes = true,
+  },
 }
 
 function M.setup(opts)
