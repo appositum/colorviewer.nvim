@@ -232,12 +232,6 @@ end, {})
 -- Auto-update on buffer changes for some filetypes
 ------------------------------------------------------------
 vim.api.nvim_create_autocmd({ "TextChanged", "BufWrite", "BufEnter" }, {
-  pattern = {
-    "*.css", "*.scss", "*.less", "*.styl",
-    "*.html", "*.htm",
-    "*.js", "*.jsx", "*.ts", "*.tsx",
-    "*.vue", "*.svelte",
-  },
   callback = function(args)
     local bufnr = args.buf
     local changedtick = vim.b[bufnr].changedtick
